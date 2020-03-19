@@ -10,7 +10,10 @@ RUN apt-get update
 RUN apt-get install -y libmysqlclient-dev
 COPY CoreServer /core_server
 COPY NodeClient /node_client
+COPY ProxyServer /proxy_server
 WORKDIR /core_server
+RUN  $HOME/.cargo/bin/cargo build
+WORKDIR /proxy_server
 RUN  $HOME/.cargo/bin/cargo build
 WORKDIR /node_client
 RUN  $HOME/.cargo/bin/cargo build
