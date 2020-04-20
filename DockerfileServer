@@ -1,19 +1,20 @@
 FROM ubuntu:18.04
 
 RUN apt-get update
-RUN apt-get install -y binutils python curl 
+RUN apt-get install -y binutils python curl gcc iproute2 libmysqlclient-dev bc
+
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rust.sh
 RUN sh rust.sh -y
-RUN apt-get install -y gcc
-RUN apt-get install -y iproute2
-RUN apt-get update
-RUN apt-get install -y libmysqlclient-dev
+
 COPY CoreServer /core_server
 COPY NodeClient /node_client
 COPY ProxyServer /proxy_server
+
 WORKDIR /core_server
-RUN  $HOME/.cargo/bin/cargo build
+RUN  $HOME/.cargo/bin/cargo build --release
+
 WORKDIR /proxy_server
-RUN  $HOME/.cargo/bin/cargo build
+RUN  $HOME/.cargo/bin/cargo build --release
+
 WORKDIR /node_client
-RUN  $HOME/.cargo/bin/cargo build
+RUN  $HOME/.cargo/bin/cargo build --release
